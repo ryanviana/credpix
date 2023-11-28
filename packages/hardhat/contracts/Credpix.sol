@@ -38,7 +38,7 @@ contract Credpix is Ownable{
     address public BRLtAddress;
     mapping(address => bool) public privilegedAccounts; //Servicos gov e bancos;
 
-    constructor(address _BRLtAddress) Ownable(msg.sender) {
+    constructor(address _BRLtAddress) Ownable() {
         BRLtAddress = _BRLtAddress;
     }
 

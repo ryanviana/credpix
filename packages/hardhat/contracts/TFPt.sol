@@ -54,7 +54,7 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
     uint256 _minimumInvestment,
     string memory _assetType,
     address _paymentToken
-  ) ERC20(_name, _symbol) Ownable(msg.sender) {
+  ) ERC20(_name, _symbol) Ownable() {
     require(bytes(_assetType).length <= 32, "Asset type must be 32 bytes or less");
 
     maxAmount = _maxAmount;
