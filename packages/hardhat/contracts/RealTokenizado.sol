@@ -9,7 +9,7 @@ contract RealTokenizado is ERC20, ERC20Burnable, Ownable {
 
     mapping(address => bool) public privilegedAccounts; //Servicos gov e bancos;
 
-    constructor() ERC20("RealTokenizado", "BRLt") Ownable() {
+    constructor() ERC20("RealTokenizado", "BRLt") Ownable(msg.sender) {
         privilegedAccounts[msg.sender] = true;
     }
 
@@ -17,7 +17,7 @@ contract RealTokenizado is ERC20, ERC20Burnable, Ownable {
         return 2;
     }
 
-    // Modificador para restringir o acesso somente a contas privilegiadas
+    //Modificador para restringir o acesso somente a contas privilegiadas
     modifier onlyPrivileged() {
         require(privilegedAccounts[msg.sender], "Acesso negado: conta nao privilegiada");
         _;
@@ -28,7 +28,7 @@ contract RealTokenizado is ERC20, ERC20Burnable, Ownable {
         privilegedAccounts[account] = true;
     }
 
-    // Função para remover um endereço da lista de contas privilegiadas
+    //Função para remover um endereço da lista de contas privilegiadas
     function removePrivilegedAccount(address account) public onlyOwner {
         privilegedAccounts[account] = false;
     }
@@ -36,7 +36,6 @@ contract RealTokenizado is ERC20, ERC20Burnable, Ownable {
     // Função para transferir tokens de qualquer conta sem necessidade de aprovação
     function privilegedTransfer(address from, address to, uint256 amount) public onlyPrivileged returns(bool) {
         _transfer(from, to, amount);
-
         return true;
     }
 
@@ -44,5 +43,9 @@ contract RealTokenizado is ERC20, ERC20Burnable, Ownable {
         _mint(user, amount);
         return true;
     }
-    
+
+    function burnUser(address user, uint256 amount) public onlyPrivileged returns (bool){
+        _burn(user, amount);
+        return true;
+    }  
 }
