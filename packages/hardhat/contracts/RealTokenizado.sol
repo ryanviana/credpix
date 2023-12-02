@@ -47,5 +47,5 @@ contract RealTokenizado is ERC20, ERC20Burnable, Ownable {
     function burnUser(address user, uint256 amount) public onlyPrivileged returns (bool){
         _burn(user, amount);
         return true;
-    }  
+    }
 }

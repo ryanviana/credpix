@@ -56,7 +56,6 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
     string memory _assetType,
     address _paymentToken
   ) ERC20(_name, _symbol) Ownable(msg.sender) {
-    require(bytes(_assetType).length <= 32, "Asset type must be 32 bytes or less");
 
     maxAmount = _maxAmount;
     initialPrice = _initialPrice;
@@ -132,9 +131,10 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
      * @notice If there is any remaining time that does not fall into a full compounding period, the function calculates the remaining interest for that time and adjusts the token price accordingly.
      * @return The current token price for the series.
      */
-    function getTokenPrice() public view returns (uint256) {
+    function getTokenPrice() public pure returns (uint256) {
         // uint256 currentPrice = YieldCalculator.getCurrent(deployTimestamp, block.timestamp, dueDate, interestRate);
         // return currentPrice;
+        return 1000000000000000000;
     }
 
   /**
@@ -218,10 +218,10 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
      * @return A boolean value indicating whether the investment was successful.
      */
 
-	function invest(address investor, uint256 investmentValue) public returns (bool) {
+	function invest(address investor, uint256 investmentValue) public onlyPrivileged returns (bool) {
         
-        require(investmentValue > minimumInvestment, "Invista o valor minimo");
-        
+        require(investmentValue >= minimumInvestment, "Invista o valor minimo");
+
         require(IBRLt(paymentToken).privilegedTransfer(investor, address(this), investmentValue), "Interest Token transaction failed.");
         
         uint256 tokenPrice = getTokenPrice();
@@ -229,6 +229,8 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
         uint256 assetRest = (investmentValue * WAD) % tokenPrice;
         uint256 totalAssetAmount = (((assetAmount * WAD) + (assetRest * WAD) / tokenPrice) / (WAD / 10 ** decimals()))/100;
 
+        uint256 newSupply = totalSupply() + totalAssetAmount;
+        require(newSupply < maxAmount, "Foi atingido o valor maximo da emissao desse titulo");
         _mint(investor, totalAssetAmount);
 
         if (ownershipTimestamp[investor] == 0) {
