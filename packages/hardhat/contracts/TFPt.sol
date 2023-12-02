@@ -19,6 +19,8 @@ interface IBRLt {
     function decimals() external returns (uint);
 
     function totalSupply() external returns (uint);
+
+    function transfer(address to, uint256 value) external returns (bool);
     
     function privilegedTransfer(address, address, uint) external returns (bool);
 }
@@ -35,8 +37,7 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
   uint256 public immutable dueDate;
   bytes32 public immutable assetType;
   uint256 public minimumInvestment;
-
-  uint8 public DECIMALS;
+  uint256 public initialPrice;
 
   address[] public tokenOwners;
   mapping(address => uint256) public ownershipTimestamp;
@@ -48,26 +49,31 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
     string memory _name,
     string memory _symbol,
     uint256 _maxAmount,
+    uint256 _initialPrice,
     uint16 _interestRate,
     uint256 _dueDate,
-    uint8 _decimals,
     uint256 _minimumInvestment,
     string memory _assetType,
     address _paymentToken
-  ) ERC20(_name, _symbol) Ownable() {
+  ) ERC20(_name, _symbol) Ownable(msg.sender) {
     require(bytes(_assetType).length <= 32, "Asset type must be 32 bytes or less");
 
     maxAmount = _maxAmount;
+    initialPrice = _initialPrice;
     interestRate = _interestRate;
     dueDate = _dueDate;
-    DECIMALS = _decimals;
     minimumInvestment = _minimumInvestment;
     assetType = keccak256(bytes(_assetType));
     deployTimestamp = block.timestamp;
 	  paymentToken = _paymentToken;
 
     privilegedAccounts[msg.sender] = true;
+    privilegedAccounts[address(this)] = true;
   }
+
+    function decimals() public view virtual override returns (uint8) {
+        return 2;
+    }
 
   modifier onlyPrivileged() {
     require(privilegedAccounts[msg.sender], "Acesso negado: conta nao privilegiada");
@@ -84,9 +90,14 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
       privilegedAccounts[account] = false;
   }
 
-  // Função para transferir tokens de qualquer conta sem necessidade de aprovação
-  function privilegedTransfer(address from, address to, uint256 amount) public onlyPrivileged {
-      _transfer(from, to, amount);
+    // Função para transferir tokens de qualquer conta sem necessidade de aprovação
+    function privilegedTransfer(address from, address to, uint256 amount) public onlyPrivileged returns(bool) {
+        _transfer(from, to, amount);
+        return true;
+    }
+
+  function privilegedTransferReal(address _from, address _to, uint256 _amount) public onlyPrivileged {
+    IBRLt(paymentToken).privilegedTransfer(_from, _to, _amount);
   }
 
   /**
@@ -122,33 +133,8 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
      * @return The current token price for the series.
      */
     function getTokenPrice() public view returns (uint256) {
-        uint256 ONE_YEAR_IN_SECONDS = 365 * 24 * 60 * 60;
-        uint256 price = WAD; // 1 * 10 ** 18
-
-        uint256 interestRateWad = interestRate * 10 ** 14; // Convert to wad format (150 = 1.5% = 0.015)
-
-        uint256 elapsedTime;
-        if (block.timestamp > dueDate) {
-            elapsedTime = dueDate - deployTimestamp;
-        } else {
-            //elapsedTime = block.timestamp + 31536000 - deployTimestamp;
-            elapsedTime = 31536000;
-        }
-
-        uint256 compoundingPeriods = elapsedTime / ONE_YEAR_IN_SECONDS;
-        uint256 remainingTime = elapsedTime % ONE_YEAR_IN_SECONDS;
-
-        for (uint256 i = 0; i < compoundingPeriods; i++) {
-            price = wmul(price, add(WAD, interestRateWad));
-        }
-
-        if (remainingTime > 0) {
-            uint256 remainingInterest = mul(interestRateWad, remainingTime) / ONE_YEAR_IN_SECONDS;
-            uint256 remainingRate = add(WAD, remainingInterest);
-            price = wmul(price, remainingRate);
-        }
-
-        return price;
+        // uint256 currentPrice = YieldCalculator.getCurrent(deployTimestamp, block.timestamp, dueDate, interestRate);
+        // return currentPrice;
     }
 
   /**
@@ -169,10 +155,6 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
    */
   function setOwnershipTimestamp(address _investor) public onlyOwner {
     ownershipTimestamp[_investor] = block.timestamp;
-  }
-
-  function decimals() public override view virtual returns (uint8) {
-    return DECIMALS;
   }
 
   /**
@@ -245,7 +227,7 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
         uint256 tokenPrice = getTokenPrice();
         uint256 assetAmount = (investmentValue * WAD) / tokenPrice;
         uint256 assetRest = (investmentValue * WAD) % tokenPrice;
-        uint256 totalAssetAmount = (((assetAmount * WAD) + (assetRest * WAD) / tokenPrice) / (WAD / 10 ** DECIMALS))/100;
+        uint256 totalAssetAmount = (((assetAmount * WAD) + (assetRest * WAD) / tokenPrice) / (WAD / 10 ** decimals()))/100;
 
         _mint(investor, totalAssetAmount);
 
@@ -257,4 +239,20 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
 
         return true;
     }
+
+    function withdrawBacen() public onlyOwner returns (bool){
+        uint256 contractBalance = IBRLt(paymentToken).balanceOf(address(this));
+        IBRLt(paymentToken).transfer(msg.sender, contractBalance);
+
+        return true;
+  }
+
+  function withdrawInvestor(address _investor, uint256 _BRLAmount) public onlyPrivileged returns (bool) {
+
+    uint256 tokensAmount = _BRLAmount / getTokenPrice();
+    privilegedTransfer(_investor, address(this), tokensAmount);
+    privilegedTransferReal(address(this), _investor, _BRLAmount);
+
+    return true;
+  }
 }
