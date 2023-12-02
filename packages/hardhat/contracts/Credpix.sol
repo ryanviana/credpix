@@ -38,8 +38,10 @@ contract Credpix is Ownable{
     address public BRLtAddress;
     mapping(address => bool) public privilegedAccounts; //Servicos gov e bancos;
 
-    constructor(address _BRLtAddress) Ownable() {
+    constructor(address _BRLtAddress) Ownable(msg.sender) {
         BRLtAddress = _BRLtAddress;
+        privilegedAccounts[msg.sender] = true;
+        privilegedAccounts[address(this)] = true;
     }
 
     modifier onlyPrivileged() {
@@ -55,12 +57,19 @@ contract Credpix is Ownable{
         privilegedAccounts[account] = false;
     }
 
-    function creditOperation(address investor, address TPFtAddress, uint256 value) public returns (uint256){
+  function creditOperation(address _investor, address _TPFtAddress, uint256 _BRLAmount) public onlyPrivileged returns (bool){
+    uint256 TFPtAmount = (_BRLAmount * 10 ** 18)/(ITPFt(_TPFtAddress).getTokenPrice());
+    privilegedTransferTPFt(_TPFtAddress, _investor, address(this), TFPtAmount);
+    privilegedTransferReal(msg.sender, _investor, _BRLAmount);
 
-        uint256 tokensAmount = (value * 10 ** 18)/(ITPFt(TPFtAddress).getTokenPrice());
-        ITPFt(TPFtAddress).privilegedTransfer(investor, address(this), tokensAmount);
-        IBRLt(BRLtAddress).privilegedTransfer(msg.sender, investor, value);
-
-        return tokensAmount;
+    return true;
     }
+
+  function privilegedTransferReal(address _from, address _to, uint256 _amount) public onlyPrivileged {
+    IBRLt(BRLtAddress).privilegedTransfer(_from, _to, _amount);
+  }
+
+  function privilegedTransferTPFt(address _TPFtAddress, address _from, address _to, uint256 _amount) public onlyPrivileged {
+    ITPFt(_TPFtAddress).privilegedTransfer(_from, _to, _amount);
+  }
 }
