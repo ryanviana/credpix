@@ -16,23 +16,8 @@ export const menuLinks: HeaderMenuLink[] = [
     icon: "",
   },
   {
-    label: "Conta digital",
-    href: "/",
-    icon: "",
-  },
-  {
-    label: "Investimentos",
-    href: "/",
-    icon: "",
-  },
-  {
     label: "Solicitar crédito",
     href: "/credit-request",
-    icon: "",
-  },
-  {
-    label: "Imobiliário",
-    href: "/",
     icon: "",
   },
 ];
