@@ -17,12 +17,12 @@ export const menuLinks: HeaderMenuLink[] = [
   },
   {
     label: "Conta digital",
-    href: "/conta-digital",
+    href: "/",
     icon: "",
   },
   {
     label: "Investimentos",
-    href: "/investimentos",
+    href: "/",
     icon: "",
   },
   {
@@ -32,7 +32,7 @@ export const menuLinks: HeaderMenuLink[] = [
   },
   {
     label: "Imobiliário",
-    href: "/imobiliario",
+    href: "/",
     icon: "",
   },
 ];
