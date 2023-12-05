@@ -56,6 +56,18 @@ Para fazer uma simulação do uso de Credpix em um banco fictício, basta clicar
 
 E pronto! Numa jornada simples de 3 passos você conseguiu seu empréstimo (e nem precisou pensar que estava usando a Web 3 😉)
 
-### 📄 Documentação dos contratos inteligentes
+## 📖 Banco de dados do Bacen
+
+Em nossa aplicação, simulamos um banco de dados fictício do Bacen para integrarmos a nossa solução e a deixarmos mais próxima da realidade.
+
+Veja profundamente a implementação na [pasta do backend](./backend/bacen-api)
+
+Você pode checar essas APIs através dos seguintes links:
+
+- Wallets por CPF por Instituição Financeira: https://bacen-api.vercel.app/wallets
+- Instituições Financeiras cadastradas: https://bacen-api.vercel.app/banks
+- Títulos Públicos por Wallet: https://bacen-api.vercel.app/tpfts
+
+## 📄 Documentação dos contratos inteligentes
 [Link da documentação dos contratos](./docs/smartContracts.md)
 
