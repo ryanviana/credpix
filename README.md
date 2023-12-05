@@ -1,33 +1,57 @@
-# 💵 Credpix 
+# 💵 Credpix: seu empréstimo tão fácil quanto fazer um pix!
 
-Uma solução de crédito colateralizado com títulos do Tesouro Nacional **de forma fácil, instantânea e desburocratizada!**
-### Documentações técnicas
-[Documentação e endereço dos contratos inteligentes!](./docs/smartContracts.md)
+O Credpix fornece a infraestutura tecnológica completa para que qualquer pessoa com Títulos do Tesouro Direto possa utilizá-los como colateral (garantia de crédito) em empréstimos de qualquer banco:
 
-## Requirements
+- Aplicações para **tokenização dos Títulos Públicos Federais**;
+- Ferramentas únicas para o uso de títulos do Tesouro Direto como garantia de crédito.
 
-Before you begin, you need to install the following tools:
+Assim, qualquer cidadão brasileiro pode utilizar seus títulos para pegar **empréstimos mais justos e fáceis** no banco em que desejar, sem qualquer burocracia ou conhecimento técnico, numa **jornada de apenas 3 passos**!
 
-- [Node (v18 LTS)](https://nodejs.org/en/download/)
-- Yarn ([v1](https://classic.yarnpkg.com/en/docs/install/) or [v2+](https://yarnpkg.com/getting-started/install))
-- [Git](https://git-scm.com/downloads)
+## 🎯 Desafios a serem resolvidos
 
-## Quickstart
+1. Subutilização do Tesouro Direto pela população, devido à falta de incentivos e meios de extrair valor dos Títulos Públicos Federais (TPFs);
+2. Ineficiência judicial e dificuldade na recuperação de créditos em *default*, ocasionando hesitação no fornecimento de crédito devido à falta de garantia da execução da dívida;
+3. Falta de liquidez nos bens utilizados como garantia de empréstimo (carros e imóveis);
+4. Alto spread bancário, resultando em crédito caro e juros altos de empréstimo;
+5. Diversificação na base de clientes do Tesouro Direto e verdadeira democratização dos títulos.
 
-To get started with Scaffold-ETH 2, follow the steps below:
+## 🚀 Nossa solução
 
-1. Clone this repo & install dependencies
+### 📈 Modelo de negócio único
 
-```
-git clone https://github.com/scaffold-eth/scaffold-eth-2.git
-cd scaffold-eth-2
-yarn install
-```
+- Tecnologia fornecida pelo Tesouro Nacional e Banco Central em conjunto, garantindo **alinhamento de interesses e completude** na operação de tokenização de TPFs;
+- **Parcerias estratégicas** com bancos e instituições financeiras, para aumentar os canais de divulgação para o público;
+- Sistema desenvolvido com **interoperabilidade**, para que o portador de títulos públicos possa utilizá-los como colateral **em qualquer instituição financeira**.
 
-4. Start your NextJS app:
+### 💻 Tecnologia própria, robusta e inovadora
 
-```
-yarn start
-```
+- Smart Contracts para tokenização funcional e completa de TPFs e Real;
+- Smart Contracts para pagamentos e operações de crédito com TPFt’s na Web 3;
+- APIs para integrar toda a população (CPFs) às suas wallets de TPFt’s nos aplicativos dos bancos;
+- APIs para integrar os bancos aos Smart Contracts do sistema Credpix;
+- Oráculos (Chainlink Functions) para garantir o funcionamento dos TPFs uma vez que estejam tokenizados, acessando dados off-chain da taxa Selic através da API do Bacen;
+- Frontend funcional e integrado para simulação e benchmarking da jornada simples de empréstimo com Credpix em um banco, de apenas 3 passos.
 
-Visit your app on: `http://localhost:3000`.
+Com o Credpix, mostramos que **é possível ser pioneiro e disruptivo com tecnologia brasileira!**
+
+### 😌 Acesso simplificado
+
+Apesar da tecnologia robusta fornecida pelo Credpix, acreditamos que a adoção em massa de uma solução de Web 3 só pode ocorrer em produtos simples para o usuário final:
+
+- **Sem necessidade de conhecer Web 3**;
+- **Sem burocracia**;
+- **Sem precisar guardar suas chaves privadas por conta própria**.
+
+Por isso, oferecemos Smart Contracts e APIs para os bancos, que entregarão uma **jornada de apenas 3 passos para o usuário final** pegar crédito (você pode conferir isso na simulação do Credpix em um banco fictício).
+
+Cada pessoa terá sua wallet em cada banco em que possui Títulos do Tesouro Direto, e usufruirá desses benefícios **sem precisar se preocupar com tecniquês!**
+
+## ✅ Teste o Credpix você mesmo!
+
+Para fazer uma simulação do uso de Credpix em um banco fictício, basta clicar no seguinte link: https://credpix.vercel.app/
+
+1. Vá para a aba de “Solicitar Crédito” no aplicativo do banco;
+2. Escolha a quantidade de empréstimo desejada;
+3. Selecione os títulos públicos que quer usar como colateral…
+
+E pronto! Numa jornada simples de 3 passos você conseguiu seu empréstimo (e nem precisou pensar que estava usando a Web 3 😉)
